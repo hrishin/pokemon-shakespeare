@@ -47,21 +47,21 @@ func NewRespnse(content string) *ServiceResponse {
 	return &ServiceResponse{Content: content}
 }
 
-type API struct {
+type Translator struct {
 	Client *http.Client
 	URL    string
 	Key    string
 }
 
-func NewAPI(APIKey string) *API {
-	return &API{
+func NewAPI(APIKey string) *Translator {
+	return &Translator{
 		Client: &http.Client{},
 		URL:    "https://api.funtranslations.com/translate/",
 		Key:    APIKey,
 	}
 }
 
-func (a *API) rquestShakespeare(text string) (*http.Request, error) {
+func (a *Translator) rquestShakespeare(text string) (*http.Request, error) {
 	data := map[string]string{"text": text}
 	post, err := json.Marshal(data)
 	if err != nil {
@@ -77,7 +77,7 @@ func (a *API) rquestShakespeare(text string) (*http.Request, error) {
 	return req, nil
 }
 
-func (a *API) Translate(text string) *ServiceResponse {
+func (a *Translator) Translate(text string) *ServiceResponse {
 	req, err := a.rquestShakespeare(text)
 	if err != nil {
 		return NewResponseError(err)
