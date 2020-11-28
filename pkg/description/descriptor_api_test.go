@@ -5,8 +5,9 @@ import (
 )
 
 func Test_get_pokemon_description(t *testing.T) {
-	want := "When several of\nthese POKéMON\ngather, their\felectricity could\nbuild and cause\nlightning storms."
-	got, err := Describe("pikachu")
+	descript := NewDescriptor()
+	got, err := descript.Describe("pikachu")
+	want := "When several of these POKéMON gather, their\felectricity could build and cause lightning storms."
 
 	if err != nil {
 		t.Errorf("wasnt expecting an error got one : %v\n", err)
@@ -18,7 +19,8 @@ func Test_get_pokemon_description(t *testing.T) {
 }
 
 func Test_get_invalid_pokemon_name(t *testing.T) {
-	_, err := Describe("doesnt exist")
+	descript := NewDescriptor()
+	_, err := descript.Describe("doesnt exist")
 	if err == nil {
 		t.Error("expecting an error but error is nil\n")
 	}

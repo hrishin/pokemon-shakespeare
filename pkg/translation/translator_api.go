@@ -87,8 +87,8 @@ func (a *Translator) Translate(text string) *ServiceResponse {
 	if err != nil {
 		return NewResponseError(err)
 	}
-	defer resp.Body.Close()
 
+	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return NewResponseError(err)
