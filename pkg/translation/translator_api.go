@@ -6,9 +6,11 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+
+	response "github.com/hrishin/pokemon-shakespeare/pkg/response"
 )
 
-type response struct {
+type transolationResponse struct {
 	Success struct {
 		Total int `json:"total"`
 	} `json:"success"`
@@ -24,36 +26,13 @@ type errorResponse struct {
 	} `json:"error"`
 }
 
-type ServiceResponse struct {
-	Content  string
-	Error    error
-	ErroCode int
-}
-
-func NewResponseError(err error) *ServiceResponse {
-	return &ServiceResponse{
-		Error: err,
-	}
-}
-
-func NewResponseErrorCode(code int, err error) *ServiceResponse {
-	return &ServiceResponse{
-		ErroCode: code,
-		Error:    err,
-	}
-}
-
-func NewRespnse(content string) *ServiceResponse {
-	return &ServiceResponse{Content: content}
-}
-
 type Translator struct {
 	Client *http.Client
 	URL    string
 	Key    string
 }
 
-func NewAPI(APIKey string) *Translator {
+func NewTranslator(APIKey string) *Translator {
 	return &Translator{
 		Client: &http.Client{},
 		URL:    "https://api.funtranslations.com/translate/",
@@ -61,53 +40,57 @@ func NewAPI(APIKey string) *Translator {
 	}
 }
 
-func (a *Translator) rquestShakespeare(text string) (*http.Request, error) {
+func (t *Translator) rquestShakespeare(text string) (*http.Request, error) {
 	data := map[string]string{"text": text}
 	post, err := json.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest(http.MethodPost, a.URL+"shakespeare.json", bytes.NewBuffer(post))
+	req, err := http.NewRequest(http.MethodPost, t.URL+"shakespeare.json", bytes.NewBuffer(post))
 	if err != nil {
 		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/json")
 
+	if t.Key != "" {
+		req.Header.Set("X-Funtranslations-Api-Secret", t.Key)
+	}
+
 	return req, nil
 }
 
-func (a *Translator) Translate(text string) *ServiceResponse {
+func (a *Translator) Translate(text string) *response.ServiceResponse {
 	req, err := a.rquestShakespeare(text)
 	if err != nil {
-		return NewResponseError(err)
+		return response.NewError(err)
 	}
 
 	resp, err := a.Client.Do(req)
 	if err != nil {
-		return NewResponseError(err)
+		return response.NewError(err)
 	}
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return NewResponseError(err)
+		return response.NewError(err)
 	}
 
 	if resp.StatusCode >= 400 {
 		var errorResponse errorResponse
 		err := json.Unmarshal(body, &errorResponse)
 		if err != nil {
-			return NewResponseError(err)
+			return response.NewError(err)
 		}
-		return NewResponseErrorCode(resp.StatusCode, errors.New(errorResponse.Error.Message))
+		return response.NewErrorCode(resp.StatusCode, errors.New(errorResponse.Error.Message))
 	}
 
-	var response response
-	err = json.Unmarshal(body, &response)
+	var transolationResp transolationResponse
+	err = json.Unmarshal(body, &transolationResp)
 	if err != nil {
-		return NewResponseError(err)
+		return response.NewError(err)
 	}
 
-	return NewRespnse(response.Contents.Translated)
+	return response.NewSuccess(transolationResp.Contents.Translated)
 }

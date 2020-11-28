@@ -3,23 +3,12 @@ package description
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
+
+	response "github.com/hrishin/pokemon-shakespeare/pkg/response"
 )
-
-type Descriptor struct {
-	Client *http.Client
-	APIURL string
-}
-
-func NewDescriptor() *Descriptor {
-	return &Descriptor{
-		Client: &http.Client{},
-		APIURL: "https://pokeapi.co/api/v2/",
-	}
-}
 
 type speciesResponse struct {
 	FlavorTextEntries []struct {
@@ -35,35 +24,47 @@ type speciesResponse struct {
 	} `json:"flavor_text_entries"`
 }
 
-func (s *speciesResponse) flavorFor(lang, version string) (string, error) {
+func (s *speciesResponse) flavorFor(lang, version string) *response.ServiceResponse {
 	for _, fl := range s.FlavorTextEntries {
 		if fl.Language.Name == lang && fl.Version.Name == version {
-			return strings.ReplaceAll(fl.FlavorText, "\n", " "), nil
+			return response.NewSuccess(strings.ReplaceAll(fl.FlavorText, "\n", " "))
 		}
 	}
 
-	return "", errors.New("No pokemon description found")
+	return response.NewError(errors.New("No pokemon description found"))
 }
 
-func (d *Descriptor) Describe(name string) (string, error) {
+type Descriptor struct {
+	Client *http.Client
+	APIURL string
+}
+
+func NewDescriptor() *Descriptor {
+	return &Descriptor{
+		Client: &http.Client{},
+		APIURL: "https://pokeapi.co/api/v2/",
+	}
+}
+
+func (d *Descriptor) Describe(name string) *response.ServiceResponse {
 	req, err := http.NewRequest(http.MethodGet, d.APIURL+"pokemon-species/"+name, nil)
 	if err != nil {
-		return "", err
+		return response.NewError(err)
 	}
 
 	resp, err := d.Client.Do(req)
 	if err != nil {
-		return "", err
+		return response.NewError(err)
 	}
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return "", err
+		return response.NewError(err)
 	}
 
 	if resp.StatusCode >= 400 {
-		return string(body), errors.New(fmt.Sprintf("%d", resp.StatusCode))
+		return response.NewErrorCode(resp.StatusCode, errors.New(string(body)))
 	}
 
 	var species speciesResponse
