@@ -98,7 +98,7 @@ func (t *translator) Translate(text string) *response.ServiceResponse {
 	if resp.StatusCode >= 400 {
 		log.Error("error occued executig http request")
 		var errResp errorResponse
-		err = json.Unmarshal(body, &errorResponse)
+		err = json.Unmarshal(body, &errResp)
 		if err == nil {
 			log.Errorf("response from funtranlation service (code :%d): %s", errResp.Error.Code, errResp.Error.Message)
 		}
