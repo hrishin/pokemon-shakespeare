@@ -15,12 +15,10 @@ func Test_get_pokemon_description(t *testing.T) {
 			"flavor_text_entries": [{
 				"flavor_text": "When several of these POKéMON gather, their\felectricity could build and cause lightning storms.",
 				"language": {
-					"name": "en",
-					"url": "https://pokeapi.co/api/v2/language/9/"
+					"name": "en"
 				},
 				"version": {
-					"name": "red",
-					"url": "https://pokeapi.co/api/v2/version/1/"
+					"name": "ruby"
 				}
 			}]
 		}`,
@@ -30,7 +28,7 @@ func Test_get_pokemon_description(t *testing.T) {
 		Client: test.MockClient(mockResponse),
 		APIURL: "https://pokeapi.co/api/v2/",
 	}
-	got := descriptor.Describe(given)
+	got := descriptor.DescribePokemon(given)
 	want := "When several of these POKéMON gather, their\felectricity could build and cause lightning storms."
 
 	if got.Error != nil {
@@ -54,7 +52,7 @@ func Test_description_for_invalid_pokemon_name(t *testing.T) {
 		Client: test.MockClient(mockResponse),
 		APIURL: "https://pokeapi.co/api/v2/",
 	}
-	got := descriptor.Describe(given)
+	got := descriptor.DescribePokemon(given)
 
 	wantErrorCode := 404
 	if got.ErroCode != wantErrorCode {

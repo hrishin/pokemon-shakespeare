@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	response "github.com/hrishin/pokemon-shakespeare/pkg/response"
+	"github.com/hrishin/pokemon-shakespeare/pkg/response"
 )
 
 type transolationResponse struct {

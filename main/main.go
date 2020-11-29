@@ -9,7 +9,9 @@ import (
 
 func main() {
 	r := mux.NewRouter()
-	r.HandleFunc("/pokemon/{name}", pokemon.GetByName)
+
+	r.HandleFunc("/pokemon/{name}", pokemon.GetByNameHandler)
 	http.Handle("/", r)
+
 	http.ListenAndServe(":5000", nil)
 }

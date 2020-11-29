@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	response "github.com/hrishin/pokemon-shakespeare/pkg/response"
+	"github.com/hrishin/pokemon-shakespeare/pkg/response"
 )
 
 type speciesResponse struct {
@@ -44,7 +44,7 @@ func NewDescriptor() *Descriptor {
 	}
 }
 
-func (d *Descriptor) Describe(name string) *response.ServiceResponse {
+func (d *Descriptor) DescribePokemon(name string) *response.ServiceResponse {
 	req, err := http.NewRequest(http.MethodGet, d.APIURL+"pokemon-species/"+name, nil)
 	if err != nil {
 		return response.NewError(err)

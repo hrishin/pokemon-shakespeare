@@ -17,11 +17,12 @@ func Test_get_description(t *testing.T) {
 		wantResponse string
 	}{
 		{
-			name:         "for charizard",
-			endpoint:     "/pokemon/",
-			pokmon:       "charizard",
-			wantStatus:   200,
-			wantResponse: `{ "description": "Charizard flies 'round the sky in search of powerful opponents. 't breathes fire of such most wondrous heat yond 't melts aught. However,  't nev'r turns its fiery breath on any opponent weaker than itself.", "name": "charizard" }`,
+			name:       "for charizard",
+			endpoint:   "/pokemon/",
+			pokmon:     "charizard",
+			wantStatus: 200,
+			wantResponse: `{"name":"charizard","description":"Charizard flies 'round the sky in search of powerful opponents. 't breathes fire of such most wondrous heat yond 't melts aught. However,  't nev'r turns its fiery breath on any opponent weaker than itself."}
+			`,
 		},
 		{
 			name:         "for a invalid pokemon",
@@ -38,10 +39,9 @@ func Test_get_description(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-
-			rr := httptest.NewRecorder()
 			router := mux.NewRouter()
-			router.HandleFunc(tc.endpoint+"{name}", GetByName)
+			router.HandleFunc(tc.endpoint+"{name}", GetByNameHandler)
+			rr := httptest.NewRecorder()
 			router.ServeHTTP(rr, req)
 
 			if status := rr.Code; status != tc.wantStatus {
@@ -49,7 +49,7 @@ func Test_get_description(t *testing.T) {
 			}
 
 			if rr.Body.String() != tc.wantResponse {
-				t.Errorf("handler returned unexpected body: got %v want %x", rr.Body.String(), tc.wantResponse)
+				t.Errorf("handler returned unexpected body: got %s want %s", rr.Body.String(), tc.wantResponse)
 			}
 		})
 	}

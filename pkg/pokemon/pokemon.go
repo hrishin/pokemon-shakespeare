@@ -9,23 +9,24 @@ import (
 	"github.com/hrishin/pokemon-shakespeare/pkg/translation"
 )
 
-func GetByName(w http.ResponseWriter, r *http.Request) {
+func GetByNameHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	name := vars["name"]
+	//TODO: name validation
 
-	desc := description.NewDescriptor()
-	resp := desc.Describe(name)
-	if resp.Error != nil {
-		resp.WriteErrorTo(w)
+	de := description.NewDescriptor()
+	desc := de.DescribePokemon(name)
+	if desc.Error != nil {
+		desc.WriteErrorTo(w)
 		return
 	}
 
-	trans := translation.NewTranslator()
-	resp = trans.Translate(resp.Content)
-	if resp.Error != nil {
-		resp.WriteErrorTo(w)
+	tr := translation.NewTranslator()
+	trans := tr.Translate(desc.Content)
+	if trans.Error != nil {
+		trans.WriteErrorTo(w)
 		return
 	}
 
-	response.NewAPIResponse(name, resp.Content).SendReponseTO(w)
+	response.NewAPIResponse(name, trans.Content).SendReponseTO(w)
 }
