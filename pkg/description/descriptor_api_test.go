@@ -7,8 +7,7 @@ import (
 	"github.com/hrishin/pokemon-shakespeare/pkg/httpmock"
 )
 
-//TODO: table drive test
-func Test_get_pokemon_description(t *testing.T) {
+func Test_fetch_valid_pokeapi_resource_description(t *testing.T) {
 	t.Parallel()
 	given := "pikachu"
 	mockResponse := httpmock.MockResponse{
@@ -34,22 +33,20 @@ func Test_get_pokemon_description(t *testing.T) {
 	got := descriptor.DescribePokemon(given)
 	want := "When several of these POKéMON gather, their\felectricity could build and cause lightning storms."
 
-	//TODO: decide fatal vs error
 	if got.Error != nil {
-		t.Errorf("wasnt expecting an error got one : %v\n", got.Error)
+		t.Fatalf("wasnt expecting an error got one : %v\n", got.Error)
 	}
 
 	if got.Content != want {
-		t.Errorf("got %s, want %s", got.Content, want)
+		t.Fatalf("got %s, want %s", got.Content, want)
 	}
 }
 
-func Test_description_for_invalid_pokemon_name(t *testing.T) {
+func Test_fetch_invalid_pokeapi_resource_description(t *testing.T) {
 	t.Parallel()
 	given := "invalid_pokemon"
 	mockResponse := httpmock.MockResponse{
 		StatusCode: 404,
-		URI:        "/pokemon-species/" + given,
 		Body:       "Not Found",
 	}
 
@@ -64,7 +61,7 @@ func Test_description_for_invalid_pokemon_name(t *testing.T) {
 		t.Errorf("expecting an error code %d but got none : %d \n", wantErrorCode, got.Error)
 	}
 
-	wantErrorMessage := "Not Found"
+	wantErrorMessage := "failed to retrieve pokemon resource invalid_pokemon (code: 404)"
 	if got.Error.Error() != wantErrorMessage {
 		t.Errorf("expecting an error %s but got %s \n", wantErrorMessage, got.Error.Error())
 	}

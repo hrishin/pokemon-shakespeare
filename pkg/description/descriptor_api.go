@@ -3,6 +3,7 @@ package description
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -65,9 +66,9 @@ func NewDescriptor() *Descriptor {
 }
 
 // string, customeErr -> string, error code
-func (d *Descriptor) DescribePokemon(name string) *response.ServiceResponse {
+func (d *Descriptor) DescribePokemon(resource string) *response.ServiceResponse {
 	//TODO: form the url package join
-	req, err := http.NewRequest(http.MethodGet, d.APIURL+"pokemon-species/"+name, nil)
+	req, err := http.NewRequest(http.MethodGet, d.APIURL+"pokemon-species/"+resource, nil)
 	if err != nil {
 		//TODO: add logs here and other places
 		return response.NewError(err)
@@ -79,15 +80,18 @@ func (d *Descriptor) DescribePokemon(name string) *response.ServiceResponse {
 	}
 
 	defer resp.Body.Close()
-	// dues to small response size reading respoonse without using buffered I/O
+	//dues to relatively small response size reading respoonse without doing the buffered I/O (buffio)
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return response.NewError(err)
 	}
 
-	//TODO: handle 500 case
-	if resp.StatusCode >= 400 {
-		return response.NewErrorCode(resp.StatusCode, errors.New(string(body)))
+	if resp.StatusCode >= 500 {
+		err := fmt.Errorf("internal server error (code: %d)", resp.StatusCode)
+		return response.NewErrorCode(resp.StatusCode, err)
+	} else if resp.StatusCode >= 400 {
+		err := fmt.Errorf("failed to retrieve pokemon resource %s (code: %d)", resource, resp.StatusCode)
+		return response.NewErrorCode(resp.StatusCode, err)
 	}
 
 	var species speciesResponse
