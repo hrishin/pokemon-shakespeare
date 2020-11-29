@@ -22,6 +22,9 @@ $(BIN_LINUX):
 unit-test:
 	go test ./pkg/...
 
+integration-test:
+	go test ./tests
+
 docker: Dockerfile
 	docker image build -t "$(REGISTRY):$(IMG_TAG)" .
 

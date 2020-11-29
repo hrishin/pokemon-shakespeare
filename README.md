@@ -84,6 +84,11 @@ curl --request GET http://localhost:5000/pokemon/pikachu
 make unit-tests
 ```
 
+### Run Integration Test
+```
+make integration-test
+```
+
 ## Implementation Details
  * To handler HTTP request it uses [gorrila/mux](https://github.com/gorilla/mux) HTTP router for `/pokemon/<name>` endpoint. It simplifies the API testing and extract path variable names.
  * Program implements the wrapper on [PokeAPI](https://pokeapi.co/docs/v2) to fetch the normal pokemon’s description. Though [Pokeapi](https://pokeapi.co/docs/v2) does mention the go client library [pokeapi-go](https://github.com/mtslzr/pokeapi-go), however it has somes [issue](https://github.com/mtslzr/pokeapi-go/issues/29) returning the correct response in some case.
