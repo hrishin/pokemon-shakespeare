@@ -14,6 +14,12 @@ import (
 
 var log = logging.MustGetLogger("descriptor")
 
+const (
+	pokeAPIURL     = "https://pokeapi.co/api/v2/"
+	defaultEnglish = "en"
+	pokeAPIVersion = "ruby"
+)
+
 type speciesResponse struct {
 	FlavorTextEntries []flavorTextEntry `json:"flavor_text_entries"`
 }
@@ -52,12 +58,6 @@ type descriptor struct {
 	client *http.Client
 	apiURL string
 }
-
-const (
-	pokeAPIURL     = "https://pokeapi.co/api/v2/"
-	defaultEnglish = "en"
-	pokeAPIVersion = "ruby"
-)
 
 func NewDescriptor() *descriptor {
 	return &descriptor{

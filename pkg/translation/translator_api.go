@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -11,33 +12,42 @@ import (
 	"github.com/hrishin/pokemon-shakespeare/pkg/response"
 )
 
+const (
+	funTransAPIURL = "https://api.funtranslations.com/translate/"
+)
+
 type transolationResponse struct {
-	Success struct {
-		Total int `json:"total"`
-	} `json:"success"`
-	Contents struct {
-		Translated string `json:"translated"`
-	} `json:"contents"`
+	Success  success  `json:"success"`
+	Contents contents `json:"contents"`
+}
+
+type success struct {
+	Total int `json:"total"`
+}
+
+type contents struct {
+	Translated string `json:"translated"`
 }
 
 type errorResponse struct {
-	Error struct {
-		Code    int    `json:"code"`
-		Message string `json:"message"`
-	} `json:"error"`
+	Error err `json:"error"`
+}
+
+type err struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
 }
 
 type translator struct {
 	client *http.Client
 	apiURL string
-	//TODO: populate in env var
 	apiKey string
 }
 
 func NewTranslator() *translator {
 	return &translator{
 		client: &http.Client{},
-		apiURL: "https://api.funtranslations.com/translate/",
+		apiURL: funTransAPIURL,
 		apiKey: os.Getenv("TRANSLATION_API_KEY"),
 	}
 
@@ -50,7 +60,7 @@ func (t *translator) rquestShakespeare(text string) (*http.Request, error) {
 		return nil, err
 	}
 
-	req, err := http.NewRequest(http.MethodPost, t.apiURL+"shakespeare.json", bytes.NewBuffer(post))
+	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%sshakespeare.json", t.apiURL), bytes.NewBuffer(post))
 	if err != nil {
 		return nil, err
 	}

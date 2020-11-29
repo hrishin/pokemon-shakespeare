@@ -40,7 +40,6 @@ func Test_translate_text(t *testing.T) {
 
 func Test_translate_text_error(t *testing.T) {
 	given := "When several of these POKéMON gather, their electricity could build and cause lightning storms."
-
 	mockResponse := httpmock.MockResponse{
 		StatusCode: 429,
 		URI:        "/shakespeare.json",
@@ -55,6 +54,7 @@ func Test_translate_text_error(t *testing.T) {
 		client: httpmock.MockClient(mockResponse),
 		apiURL: "https://api.funtranslations.com/translate/",
 	}
+
 	got := translator.Translate(given)
 
 	wantErrorCode := 429
