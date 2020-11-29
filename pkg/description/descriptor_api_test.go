@@ -26,9 +26,9 @@ func Test_fetch_valid_pokeapi_resource_description(t *testing.T) {
 		}`,
 	}
 
-	descriptor := &Descriptor{
-		Client: httpmock.MockClient(mockResponse),
-		APIURL: "https://pokeapi.co/api/v2/",
+	descriptor := &descriptor{
+		client: httpmock.MockClient(mockResponse),
+		apiURL: pokeAPIURL,
 	}
 	got := descriptor.DescribePokemon(given)
 	want := "When several of these POKéMON gather, their\felectricity could build and cause lightning storms."
@@ -42,7 +42,7 @@ func Test_fetch_valid_pokeapi_resource_description(t *testing.T) {
 	}
 }
 
-func Test_fetch_invalid_pokeapi_resource_description(t *testing.T) {
+func Test_fetch_invalid_pokeapi_resource_gitdescription(t *testing.T) {
 	t.Parallel()
 	given := "invalid_pokemon"
 	mockResponse := httpmock.MockResponse{
@@ -50,9 +50,9 @@ func Test_fetch_invalid_pokeapi_resource_description(t *testing.T) {
 		Body:       "Not Found",
 	}
 
-	descriptor := &Descriptor{
-		Client: httpmock.MockClient(mockResponse),
-		APIURL: "https://pokeapi.co/api/v2/",
+	descriptor := &descriptor{
+		client: httpmock.MockClient(mockResponse),
+		apiURL: pokeAPIURL,
 	}
 	got := descriptor.DescribePokemon(given)
 

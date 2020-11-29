@@ -45,34 +45,34 @@ func (s speciesResponse) descriptionFor(language, version string) (string, error
 	return "", errors.New("No pokemon description found")
 }
 
-type Descriptor struct {
-	Client *http.Client
-	APIURL string
+type descriptor struct {
+	client *http.Client
+	apiURL string
 }
 
 const (
-	pokeAPI        = "https://pokeapi.co/api/v2/"
+	pokeAPIURL     = "https://pokeapi.co/api/v2/"
 	defaultEnglish = "en"
 	pokeAPIVersion = "ruby"
 )
 
-func NewDescriptor() *Descriptor {
-	return &Descriptor{
-		Client: &http.Client{},
-		APIURL: pokeAPI,
+func NewDescriptor() *descriptor {
+	return &descriptor{
+		client: &http.Client{},
+		apiURL: pokeAPIURL,
 	}
 }
 
 // string, customeErr -> string, error code
-func (d *Descriptor) DescribePokemon(resource string) *response.ServiceResponse {
-	url = fmt.Sprintf(d.APIURL + "pokemon-species/" + resource)
+func (d *descriptor) DescribePokemon(resource string) *response.ServiceResponse {
+	url := fmt.Sprintf(d.apiURL + "pokemon-species/" + resource)
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		//TODO: add logs here and other places
 		return response.NewError(err)
 	}
 
-	resp, err := d.Client.Do(req)
+	resp, err := d.client.Do(req)
 	if err != nil {
 		return response.NewError(err)
 	}
