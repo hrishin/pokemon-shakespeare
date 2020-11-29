@@ -3,18 +3,21 @@ package translation
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
 
 	"github.com/hrishin/pokemon-shakespeare/pkg/response"
+	"github.com/op/go-logging"
 )
 
 const (
-	funTransAPIURL = "https://api.funtranslations.com/translate/"
+	funTransAPIURL  = "https://api.funtranslations.com/translate/"
+	httpLimitExceed = 429
 )
+
+var log = logging.MustGetLogger("translator")
 
 type transolationResponse struct {
 	Success  success  `json:"success"`
@@ -50,7 +53,6 @@ func NewTranslator() *translator {
 		apiURL: funTransAPIURL,
 		apiKey: os.Getenv("TRANSLATION_API_KEY"),
 	}
-
 }
 
 func (t *translator) rquestShakespeare(text string) (*http.Request, error) {
@@ -76,32 +78,38 @@ func (t *translator) rquestShakespeare(text string) (*http.Request, error) {
 func (t *translator) Translate(text string) *response.ServiceResponse {
 	req, err := t.rquestShakespeare(text)
 	if err != nil {
+		log.Errorf("error occued creating http request : %v", err)
 		return response.NewError(err)
 	}
 
 	resp, err := t.client.Do(req)
 	if err != nil {
+		log.Errorf("error occued executig http request for the text %s : %v", text, err)
 		return response.NewError(err)
 	}
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		log.Errorf("error occued reading http response for the text %s : %v", text, err)
 		return response.NewError(err)
 	}
 
 	if resp.StatusCode >= 400 {
-		var errorResponse errorResponse
-		err := json.Unmarshal(body, &errorResponse)
-		if err != nil {
-			return response.NewError(err)
+		log.Error("error occued executig http request")
+		var errResp errorResponse
+		err = json.Unmarshal(body, &errorResponse)
+		if err == nil {
+			log.Errorf("response from funtranlation service (code :%d): %s", errResp.Error.Code, errResp.Error.Message)
 		}
-		return response.NewErrorCode(resp.StatusCode, errors.New(errorResponse.Error.Message))
+		err = fmt.Errorf("internal server error (code: %d)", http.StatusInternalServerError)
+		return response.NewErrorCode(http.StatusInternalServerError, err)
 	}
 
 	var transolationResp transolationResponse
 	err = json.Unmarshal(body, &transolationResp)
 	if err != nil {
+		log.Errorf("error occued unmarshalling translation response : %v", err)
 		return response.NewError(err)
 	}
 

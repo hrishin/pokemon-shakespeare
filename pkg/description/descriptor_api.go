@@ -12,13 +12,13 @@ import (
 	"github.com/op/go-logging"
 )
 
-var log = logging.MustGetLogger("descriptor")
-
 const (
 	pokeAPIURL     = "https://pokeapi.co/api/v2/"
 	defaultEnglish = "en"
 	pokeAPIVersion = "ruby"
 )
+
+var log = logging.MustGetLogger("descriptor")
 
 type speciesResponse struct {
 	FlavorTextEntries []flavorTextEntry `json:"flavor_text_entries"`
@@ -84,6 +84,7 @@ func (d *descriptor) DescribePokemon(resource string) *response.ServiceResponse 
 	//due to relatively small response size reading respoonse without doing the buffered I/O (buffio)
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		log.Errorf("error occued reading http response for resource %s : %v", resource, err)
 		return response.NewError(err)
 	}
 

@@ -57,12 +57,12 @@ func Test_translate_text_error(t *testing.T) {
 
 	got := translator.Translate(given)
 
-	wantErrorCode := 429
+	wantErrorCode := 500
 	if got.ErroCode != wantErrorCode {
-		t.Errorf("expecting an error code %d but got none : %d \n", wantErrorCode, got.Error)
+		t.Errorf("expecting an error code %d but got none : %d \n", wantErrorCode, got.ErroCode)
 	}
 
-	wantErrorMessage := "Too Many Requests: Rate limit of 5 requests per hour exceeded. Please wait for 59 minutes and 48 seconds."
+	wantErrorMessage := "internal server error (code: 500)"
 	if got.Error.Error() != wantErrorMessage {
 		t.Errorf("expecting an error %s but got %s \n", wantErrorMessage, got.Error.Error())
 	}
