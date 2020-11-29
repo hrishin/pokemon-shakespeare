@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
+//TODO: move this test into integration-test/e2e
 func Test_get_description(t *testing.T) {
 	tt := []struct {
 		name         string
@@ -21,15 +22,12 @@ func Test_get_description(t *testing.T) {
 			endpoint:   "/pokemon/",
 			pokmon:     "charizard",
 			wantStatus: 200,
-			wantResponse: `{"name":"charizard","description":"Charizard flies 'round the sky in search of powerful opponents. 't breathes fire of such most wondrous heat yond 't melts aught. However,  't nev'r turns its fiery breath on any opponent weaker than itself."}
-			`,
 		},
 		{
-			name:         "for a invalid pokemon",
-			endpoint:     "/pokemon/",
-			pokmon:       "foobar",
-			wantStatus:   404,
-			wantResponse: "Not Found",
+			name:       "for a invalid pokemon",
+			endpoint:   "/pokemon/",
+			pokmon:     "foobar",
+			wantStatus: 404,
 		},
 	}
 
@@ -40,16 +38,12 @@ func Test_get_description(t *testing.T) {
 				t.Fatal(err)
 			}
 			router := mux.NewRouter()
-			router.HandleFunc(tc.endpoint+"{name}", GetByNameHandler)
+			router.HandleFunc(tc.endpoint+"{name}", GetDescriptionHandler)
 			rr := httptest.NewRecorder()
 			router.ServeHTTP(rr, req)
 
 			if status := rr.Code; status != tc.wantStatus {
 				t.Errorf("unexpected error code returned: got %v want %v", status, http.StatusOK)
-			}
-
-			if rr.Body.String() != tc.wantResponse {
-				t.Errorf("handler returned unexpected body: got %s want %s", rr.Body.String(), tc.wantResponse)
 			}
 		})
 	}

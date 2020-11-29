@@ -3,12 +3,12 @@ package translation
 import (
 	"testing"
 
-	"github.com/hrishin/pokemon-shakespeare/pkg/test"
+	"github.com/hrishin/pokemon-shakespeare/pkg/httpmock"
 )
 
 func Test_translate_text(t *testing.T) {
 	given := "When several of these POKéMON gather, their electricity could build and cause lightning storms."
-	mockResponse := test.MockResponse{
+	mockResponse := httpmock.MockResponse{
 		StatusCode: 200,
 		URI:        "/shakespeare.json",
 		Body: `{
@@ -22,7 +22,7 @@ func Test_translate_text(t *testing.T) {
 	}
 
 	Translator := &Translator{
-		Client: test.MockClient(mockResponse),
+		Client: httpmock.MockClient(mockResponse),
 		URL:    "https://api.funtranslations.com/translate/",
 	}
 
@@ -41,7 +41,7 @@ func Test_translate_text(t *testing.T) {
 func Test_translate_text_error(t *testing.T) {
 	given := "When several of these POKéMON gather, their electricity could build and cause lightning storms."
 
-	mockResponse := test.MockResponse{
+	mockResponse := httpmock.MockResponse{
 		StatusCode: 429,
 		URI:        "/shakespeare.json",
 		Body: `{
@@ -52,7 +52,7 @@ func Test_translate_text_error(t *testing.T) {
 	}
 
 	Translator := &Translator{
-		Client: test.MockClient(mockResponse),
+		Client: httpmock.MockClient(mockResponse),
 		URL:    "https://api.funtranslations.com/translate/",
 	}
 	got := Translator.Translate(given)

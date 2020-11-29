@@ -9,10 +9,12 @@ import (
 	"github.com/hrishin/pokemon-shakespeare/pkg/translation"
 )
 
-func GetByNameHandler(w http.ResponseWriter, r *http.Request) {
+func GetDescriptionHandler(w http.ResponseWriter, r *http.Request) {
+	//TODO: exaplain why we used mux to handle such path variable
 	vars := mux.Vars(r)
 	name := vars["name"]
 	//TODO: name validation
+	//Scope: no empty
 
 	de := description.NewDescriptor()
 	desc := de.DescribePokemon(name)

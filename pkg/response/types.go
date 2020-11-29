@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+//TODO: add jsons tags
 type ServiceResponse struct {
 	Content  string
 	Error    error
@@ -33,6 +34,7 @@ func (sr *ServiceResponse) WriteErrorTo(w http.ResponseWriter) {
 	if sr.ErroCode != 0 {
 		statuCode = sr.ErroCode
 	}
+	//TODO: encode json response
 	w.WriteHeader(statuCode)
 	w.Write([]byte(sr.Error.Error()))
 }

@@ -29,14 +29,17 @@ type errorResponse struct {
 type Translator struct {
 	Client *http.Client
 	URL    string
-	Key    string
+	//TODO: populate in env var
+	APIKey string
 }
 
 func NewTranslator() *Translator {
 	return &Translator{
 		Client: &http.Client{},
 		URL:    "https://api.funtranslations.com/translate/",
+		APIKey: "", //TODO: os.getEnv ,
 	}
+
 }
 
 func (t *Translator) rquestShakespeare(text string) (*http.Request, error) {
@@ -52,8 +55,8 @@ func (t *Translator) rquestShakespeare(text string) (*http.Request, error) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 
-	if t.Key != "" {
-		req.Header.Set("X-Funtranslations-Api-Secret", t.Key)
+	if t.APIKey != "" {
+		req.Header.Set("X-Funtranslations-Api-Secret", t.APIKey)
 	}
 
 	return req, nil
