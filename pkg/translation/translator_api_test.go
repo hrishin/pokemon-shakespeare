@@ -21,12 +21,12 @@ func Test_translate_text(t *testing.T) {
 		}`,
 	}
 
-	Translator := &Translator{
-		Client: httpmock.MockClient(mockResponse),
-		URL:    "https://api.funtranslations.com/translate/",
+	translator := &translator{
+		client: httpmock.MockClient(mockResponse),
+		apiURL: "https://api.funtranslations.com/translate/",
 	}
 
-	got := Translator.Translate(given)
+	got := translator.Translate(given)
 
 	if got.Error != nil {
 		t.Errorf("wasnt expecting an error but got one : %v \n", got.Error)
@@ -51,11 +51,11 @@ func Test_translate_text_error(t *testing.T) {
 		}`,
 	}
 
-	Translator := &Translator{
-		Client: httpmock.MockClient(mockResponse),
-		URL:    "https://api.funtranslations.com/translate/",
+	translator := &translator{
+		client: httpmock.MockClient(mockResponse),
+		apiURL: "https://api.funtranslations.com/translate/",
 	}
-	got := Translator.Translate(given)
+	got := translator.Translate(given)
 
 	wantErrorCode := 429
 	if got.ErroCode != wantErrorCode {

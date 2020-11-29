@@ -6,6 +6,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/hrishin/pokemon-shakespeare/pkg/response"
 )
@@ -26,49 +27,49 @@ type errorResponse struct {
 	} `json:"error"`
 }
 
-type Translator struct {
-	Client *http.Client
-	URL    string
+type translator struct {
+	client *http.Client
+	apiURL string
 	//TODO: populate in env var
-	APIKey string
+	apiKey string
 }
 
-func NewTranslator() *Translator {
-	return &Translator{
-		Client: &http.Client{},
-		URL:    "https://api.funtranslations.com/translate/",
-		APIKey: "", //TODO: os.getEnv ,
+func NewTranslator() *translator {
+	return &translator{
+		client: &http.Client{},
+		apiURL: "https://api.funtranslations.com/translate/",
+		apiKey: os.Getenv("TRANSLATION_API_KEY"),
 	}
 
 }
 
-func (t *Translator) rquestShakespeare(text string) (*http.Request, error) {
+func (t *translator) rquestShakespeare(text string) (*http.Request, error) {
 	data := map[string]string{"text": text}
 	post, err := json.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest(http.MethodPost, t.URL+"shakespeare.json", bytes.NewBuffer(post))
+	req, err := http.NewRequest(http.MethodPost, t.apiURL+"shakespeare.json", bytes.NewBuffer(post))
 	if err != nil {
 		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/json")
 
-	if t.APIKey != "" {
-		req.Header.Set("X-Funtranslations-Api-Secret", t.APIKey)
+	if t.apiKey != "" {
+		req.Header.Set("X-Funtranslations-Api-Secret", t.apiKey)
 	}
 
 	return req, nil
 }
 
-func (a *Translator) Translate(text string) *response.ServiceResponse {
-	req, err := a.rquestShakespeare(text)
+func (t *translator) Translate(text string) *response.ServiceResponse {
+	req, err := t.rquestShakespeare(text)
 	if err != nil {
 		return response.NewError(err)
 	}
 
-	resp, err := a.Client.Do(req)
+	resp, err := t.client.Do(req)
 	if err != nil {
 		return response.NewError(err)
 	}
