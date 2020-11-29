@@ -10,32 +10,40 @@ import (
 	"github.com/hrishin/pokemon-shakespeare/pkg/response"
 )
 
-//TODO: decompose into smaller structs
 type speciesResponse struct {
-	FlavorTextEntries []struct {
-		FlavorText string `json:"flavor_text"`
-		Language   struct {
-			Name string `json:"name"`
-		} `json:"language"`
-		Version struct {
-			Name string `json:"name"`
-		} `json:"version"`
-	} `json:"flavor_text_entries"`
+	FlavorTextEntries []flavorTextEntry `json:"flavor_text_entries"`
 }
 
-//TODO: return string, err instead of reponse
-//TODO: rename flavorFor to describe
-func (s speciesResponse) flavorFor(lang, version string) *response.ServiceResponse {
+type flavorTextEntry struct {
+	FlavorText string `json:"flavor_text"`
+	Language   name   `json:"language"`
+	Version    name   `json:"version"`
+}
+
+func (fl flavorTextEntry) macth(language, version string) bool {
+	if fl.Language.Name == language && fl.Version.Name == version {
+		return true
+	}
+	return false
+}
+
+func (fl flavorTextEntry) format() string {
+	//TODO: decompose into small string
+	//TODO: fix string formatting
+	return strings.ReplaceAll(fl.FlavorText, "\n", " ")
+}
+
+type name struct {
+	Name string `json:"name"`
+}
+
+func (s speciesResponse) descriptionFor(language, version string) (string, error) {
 	for _, fl := range s.FlavorTextEntries {
-		//TODO: explain using comment
-		if fl.Language.Name == lang && fl.Version.Name == version {
-			//TODO: decompose into small string
-			//TODO: fix string formatting
-			return response.NewSuccess(strings.ReplaceAll(fl.FlavorText, "\n", " "))
+		if fl.macth(language, version) {
+			return fl.format(), nil
 		}
 	}
-
-	return response.NewError(errors.New("No pokemon description found"))
+	return "", errors.New("No pokemon description found")
 }
 
 type Descriptor struct {
@@ -44,7 +52,9 @@ type Descriptor struct {
 }
 
 const (
-	pokeAPI = "https://pokeapi.co/api/v2/"
+	pokeAPI        = "https://pokeapi.co/api/v2/"
+	defaultEnglish = "en"
+	pokeAPIVersion = "ruby"
 )
 
 func NewDescriptor() *Descriptor {
@@ -82,8 +92,14 @@ func (d *Descriptor) DescribePokemon(name string) *response.ServiceResponse {
 
 	var species speciesResponse
 	err = json.Unmarshal(body, &species)
-	//TODO: error handling :P
+	if err != nil {
+		return response.NewError(err)
+	}
 
-	//TODO: constants e.g. pokeAPIVersion = ruby, dafaultLanguage=en
-	return species.flavorFor("en", "ruby")
+	desc, err := species.descriptionFor(defaultEnglish, pokeAPIVersion)
+	if err != nil {
+		return response.NewError(err)
+	}
+
+	return response.NewSuccess(desc)
 }

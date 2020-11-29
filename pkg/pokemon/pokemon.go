@@ -10,7 +10,7 @@ import (
 )
 
 func GetDescriptionHandler(w http.ResponseWriter, r *http.Request) {
-	//TODO: exaplain why we used mux to handle such path variable
+	//One of the reason to mux handler is to extract the path variables easily
 	vars := mux.Vars(r)
 	name := vars["name"]
 	//TODO: name validation
