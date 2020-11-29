@@ -70,13 +70,13 @@ func (d *descriptor) DescribePokemon(resource string) *response.ServiceResponse 
 	url := fmt.Sprintf(d.apiURL + "pokemon-species/" + resource)
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
-		log.Errorf("error occued creating http request : %v", err)
+		log.Errorf("error creating http request : %v", err)
 		return response.NewError(err)
 	}
 
 	resp, err := d.client.Do(req)
 	if err != nil {
-		log.Errorf("error occued executig http request for the resource %s : %v", resource, err)
+		log.Errorf("error executing http request for the resource %s : %v", resource, err)
 		return response.NewError(err)
 	}
 
@@ -84,30 +84,30 @@ func (d *descriptor) DescribePokemon(resource string) *response.ServiceResponse 
 	//due to relatively small response size reading respoonse without doing the buffered I/O (buffio)
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Errorf("error occued reading http response for resource %s : %v", resource, err)
+		log.Errorf("error reading http response for resource %s : %v", resource, err)
 		return response.NewError(err)
 	}
 
 	if resp.StatusCode >= 500 {
 		err := fmt.Errorf("internal server error (code: %d)", resp.StatusCode)
-		log.Errorf("error occued executig http request for the resource %s : %v", resource, err)
+		log.Errorf("error executing http request for the resource %s : %v", resource, err)
 		return response.NewErrorCode(resp.StatusCode, err)
 	} else if resp.StatusCode >= 400 {
 		err := fmt.Errorf("failed to retrieve pokemon resource %s (code: %d)", resource, resp.StatusCode)
-		log.Errorf("error occued executig http request for the resource %s : %v", resource, err)
+		log.Errorf("error executing http request for the resource %s : %v", resource, err)
 		return response.NewErrorCode(resp.StatusCode, err)
 	}
 
 	var species speciesResponse
 	err = json.Unmarshal(body, &species)
 	if err != nil {
-		log.Errorf("error occued unmarshalling species response : %v", err)
+		log.Errorf("error unmarshalling species response : %v", err)
 		return response.NewError(err)
 	}
 
 	desc, err := species.descriptionFor(defaultEnglish, pokeAPIVersion)
 	if err != nil {
-		log.Errorf("error occued in finding species description : %v", err)
+		log.Errorf("error finding species description : %v", err)
 		return response.NewError(err)
 	}
 

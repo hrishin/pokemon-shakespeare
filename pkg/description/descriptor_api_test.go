@@ -7,7 +7,7 @@ import (
 	"github.com/hrishin/pokemon-shakespeare/pkg/httpmock"
 )
 
-func Test_fetch_valid_pokeapi_resource_description(t *testing.T) {
+func Test_fetch_valid_resource_description(t *testing.T) {
 	t.Parallel()
 	given := "pikachu"
 	mockResponse := httpmock.MockResponse{
@@ -42,7 +42,7 @@ func Test_fetch_valid_pokeapi_resource_description(t *testing.T) {
 	}
 }
 
-func Test_fetch_invalid_pokeapi_resource_gitdescription(t *testing.T) {
+func Test_fetch_invalid_resource_description(t *testing.T) {
 	t.Parallel()
 	given := "invalid_pokemon"
 	mockResponse := httpmock.MockResponse{

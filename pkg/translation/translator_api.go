@@ -19,7 +19,7 @@ const (
 
 var log = logging.MustGetLogger("translator")
 
-type transolationResponse struct {
+type translationResponse struct {
 	Success  success  `json:"success"`
 	Contents contents `json:"contents"`
 }
@@ -78,25 +78,25 @@ func (t *translator) rquestShakespeare(text string) (*http.Request, error) {
 func (t *translator) Translate(text string) *response.ServiceResponse {
 	req, err := t.rquestShakespeare(text)
 	if err != nil {
-		log.Errorf("error occued creating http request : %v", err)
+		log.Errorf("error creating http request : %v", err)
 		return response.NewError(err)
 	}
 
 	resp, err := t.client.Do(req)
 	if err != nil {
-		log.Errorf("error occued executig http request for the text %s : %v", text, err)
+		log.Errorf("error executing http request for the text %s : %v", text, err)
 		return response.NewError(err)
 	}
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Errorf("error occued reading http response for the text %s : %v", text, err)
+		log.Errorf("error reading http response for the text %s : %v", text, err)
 		return response.NewError(err)
 	}
 
 	if resp.StatusCode >= 400 {
-		log.Error("error occued executig http request")
+		log.Error("error executing http request")
 		var errResp errorResponse
 		err = json.Unmarshal(body, &errResp)
 		if err == nil {
@@ -106,12 +106,12 @@ func (t *translator) Translate(text string) *response.ServiceResponse {
 		return response.NewErrorCode(http.StatusInternalServerError, err)
 	}
 
-	var transolationResp transolationResponse
-	err = json.Unmarshal(body, &transolationResp)
+	var transResp translationResponse
+	err = json.Unmarshal(body, &transResp)
 	if err != nil {
-		log.Errorf("error occued unmarshalling translation response : %v", err)
+		log.Errorf("error unmarshalling translation response : %v", err)
 		return response.NewError(err)
 	}
 
-	return response.NewSuccess(transolationResp.Contents.Translated)
+	return response.NewSuccess(transResp.Contents.Translated)
 }

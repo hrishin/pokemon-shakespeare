@@ -8,7 +8,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-//TODO: move this test into integration-test/e2e
 func Test_get_description(t *testing.T) {
 	tt := []struct {
 		name         string

@@ -12,11 +12,13 @@ import (
 
 var log = logging.MustGetLogger("pokemon")
 
+// GetDescriptionHandler is a handler to get the pokemons description
+// and translates into shakespeares words
 func GetDescriptionHandler(w http.ResponseWriter, r *http.Request) {
 	//One of the reason to mux handler is to extract the path variables easily
 	vars := mux.Vars(r)
 	name := vars["name"]
-	log.Infof("getting the transolation for %s poken", name)
+	log.Infof("getting the translation for %s pokemon", name)
 
 	de := description.NewDescriptor()
 	desc := de.DescribePokemon(name)
@@ -32,6 +34,6 @@ func GetDescriptionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Infof("responding the transolation %s for %s poken", trans.Content, name)
+	log.Infof("responding the translation %s for %s pokemon", trans.Content, name)
 	response.NewAPIResponse(name, trans.Content).SendReponseTO(w)
 }
