@@ -2,4 +2,4 @@ module github.com/hrishin/pokemon-shakespeare
 
 go 1.15
 
-require github.com/mtslzr/pokeapi-go v1.4.0
+require github.com/gorilla/mux v1.8.0

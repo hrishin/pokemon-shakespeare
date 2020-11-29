@@ -32,11 +32,10 @@ type Translator struct {
 	Key    string
 }
 
-func NewTranslator(APIKey string) *Translator {
+func NewTranslator() *Translator {
 	return &Translator{
 		Client: &http.Client{},
 		URL:    "https://api.funtranslations.com/translate/",
-		Key:    APIKey,
 	}
 }
 

@@ -15,11 +15,9 @@ type speciesResponse struct {
 		FlavorText string `json:"flavor_text"`
 		Language   struct {
 			Name string `json:"name"`
-			URL  string `json:"url"`
 		} `json:"language"`
 		Version struct {
 			Name string `json:"name"`
-			URL  string `json:"url"`
 		} `json:"version"`
 	} `json:"flavor_text_entries"`
 }
@@ -70,5 +68,5 @@ func (d *Descriptor) Describe(name string) *response.ServiceResponse {
 	var species speciesResponse
 	err = json.Unmarshal(body, &species)
 
-	return species.flavorFor("en", "red")
+	return species.flavorFor("en", "ruby")
 }
