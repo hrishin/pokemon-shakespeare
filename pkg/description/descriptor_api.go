@@ -28,9 +28,7 @@ func (fl flavorTextEntry) macth(language, version string) bool {
 	return false
 }
 
-func (fl flavorTextEntry) format() string {
-	//TODO: decompose into small string
-	//TODO: fix string formatting
+func (fl flavorTextEntry) formatted() string {
 	return strings.ReplaceAll(fl.FlavorText, "\n", " ")
 }
 
@@ -41,7 +39,7 @@ type name struct {
 func (s speciesResponse) descriptionFor(language, version string) (string, error) {
 	for _, fl := range s.FlavorTextEntries {
 		if fl.macth(language, version) {
-			return fl.format(), nil
+			return fl.formatted(), nil
 		}
 	}
 	return "", errors.New("No pokemon description found")
@@ -67,8 +65,8 @@ func NewDescriptor() *Descriptor {
 
 // string, customeErr -> string, error code
 func (d *Descriptor) DescribePokemon(resource string) *response.ServiceResponse {
-	//TODO: form the url package join
-	req, err := http.NewRequest(http.MethodGet, d.APIURL+"pokemon-species/"+resource, nil)
+	url = fmt.Sprintf(d.APIURL + "pokemon-species/" + resource)
+	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		//TODO: add logs here and other places
 		return response.NewError(err)
