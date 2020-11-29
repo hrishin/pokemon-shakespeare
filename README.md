@@ -95,6 +95,7 @@ make integration-test
  * Upon fetching the pokemon description, another wrapper written on [funtranslations](https://funtranslations.com/api/shakespeare) gets the
  pokemon description in the Shakespeares words style.
  * Some utility packages are written to mock the HTTP response behaviour
+ * Use [ginkgo](https://github.com/onsi/ginkgo) and [omega](https://github.com/onsi/gomega) for the integration test and assertions respectively.
 
 ## Improvements
 - Switch to Pokeapi client-go:
