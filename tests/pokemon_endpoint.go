@@ -1,7 +1,6 @@
 package tests
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -19,7 +18,6 @@ var _ = Describe("Pokemon endpoint tests", func() {
 			rr, err := pokemonDescription("charizard")
 			response := strings.TrimSuffix(rr.Body.String(), "\n")
 
-			fmt.Println(response)
 			Expect(err).To(BeNil(), "Error")
 			Expect(rr.Code).To(Equal(http.StatusOK), "Status code")
 			Expect(response).To(Equal(`{"name":"charizard","description":"Charizard flies 'round the sky in search of powerful opponents. 't breathes fire of such most wondrous heat yond 't melts aught. However,  't nev'r turns its fiery breath on any opponent weaker than itself."}`), "Response message")
