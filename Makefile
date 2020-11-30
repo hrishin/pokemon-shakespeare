@@ -23,7 +23,7 @@ unit-test:
 	go test ./pkg/...
 
 integration-test:
-	go test ./tests
+	go test ./tests -v
 
 docker: Dockerfile
 	docker image build -t "$(REGISTRY):$(IMG_TAG)" .
