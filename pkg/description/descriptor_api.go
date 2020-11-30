@@ -54,20 +54,22 @@ func (s speciesResponse) descriptionFor(language, version string) (string, error
 	return "", errors.New("No pokemon description found")
 }
 
-type descriptor struct {
+type Descriptor struct {
 	client *http.Client
-	apiURL string
+	APIURL string
 }
 
-func NewDescriptor() *descriptor {
-	return &descriptor{
+// NewDescriptor creates the description pointer type
+// which provides the methods to fetch the basic description of the pokemon
+func NewDescriptor() *Descriptor {
+	return &Descriptor{
 		client: &http.Client{},
-		apiURL: pokeAPIURL,
+		APIURL: pokeAPIURL,
 	}
 }
 
-func (d *descriptor) DescribePokemon(resource string) *response.ServiceResponse {
-	url := fmt.Sprintf(d.apiURL + "pokemon-species/" + resource)
+func (d *Descriptor) DescribePokemon(resource string) *response.ServiceResponse {
+	url := fmt.Sprintf(d.APIURL + "pokemon-species/" + resource)
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		log.Errorf("error creating http request : %v", err)

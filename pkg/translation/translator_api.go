@@ -41,41 +41,44 @@ type err struct {
 	Message string `json:"message"`
 }
 
-type translator struct {
+type Translator struct {
 	client *http.Client
-	apiURL string
-	apiKey string
+	APIURL string
+	APIKey string
 }
 
-func NewTranslator() *translator {
-	return &translator{
+// NewTranslator creates the translator type
+// which provides the methods to translate the given words
+// to Shakspeares types words
+func NewTranslator() *Translator {
+	return &Translator{
 		client: &http.Client{},
-		apiURL: funTransAPIURL,
-		apiKey: os.Getenv("TRANSLATION_API_KEY"),
+		APIURL: funTransAPIURL,
+		APIKey: os.Getenv("TRANSLATION_API_KEY"),
 	}
 }
 
-func (t *translator) rquestShakespeare(text string) (*http.Request, error) {
+func (t *Translator) rquestShakespeare(text string) (*http.Request, error) {
 	data := map[string]string{"text": text}
 	post, err := json.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%sshakespeare.json", t.apiURL), bytes.NewBuffer(post))
+	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%sshakespeare.json", t.APIURL), bytes.NewBuffer(post))
 	if err != nil {
 		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/json")
 
-	if t.apiKey != "" {
-		req.Header.Set("X-Funtranslations-Api-Secret", t.apiKey)
+	if t.APIKey != "" {
+		req.Header.Set("X-Funtranslations-Api-Secret", t.APIKey)
 	}
 
 	return req, nil
 }
 
-func (t *translator) Translate(text string) *response.ServiceResponse {
+func (t *Translator) Translate(text string) *response.ServiceResponse {
 	req, err := t.rquestShakespeare(text)
 	if err != nil {
 		log.Errorf("error creating http request : %v", err)

@@ -21,9 +21,9 @@ func Test_translate_text(t *testing.T) {
 		}`,
 	}
 
-	translator := &translator{
+	translator := &Translator{
 		client: httpmock.MockClient(mockResponse),
-		apiURL: "https://api.funtranslations.com/translate/",
+		APIURL: "https://api.funtranslations.com/translate/",
 	}
 
 	got := translator.Translate(given)
@@ -50,9 +50,9 @@ func Test_translate_text_error(t *testing.T) {
 		}`,
 	}
 
-	translator := &translator{
+	translator := &Translator{
 		client: httpmock.MockClient(mockResponse),
-		apiURL: "https://api.funtranslations.com/translate/",
+		APIURL: "https://api.funtranslations.com/translate/",
 	}
 
 	got := translator.Translate(given)
