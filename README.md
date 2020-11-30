@@ -1,5 +1,10 @@
 # Pokemon Shakespeare
 
+<p align="left">
+  <a href="https://github.com/actions/setup-go/actions"><img alt="GitHub Actions CI status" src="https://github.com/hrishin/pokemon-shakespeare/workflows/build-and-test/badge.svg"></a>
+</p>
+
+
 Its a Rest API service to describe a given [pokemon's](https://en.wikipedia.org/wiki/Pok%C3%A9mon) characteristics in [William Shakeperar's](https://en.wikipedia.org/wiki/William_Shakespeare) words. 
 
 The service is written in [Go](https://golang.org) and provides the following endpoint(s).
