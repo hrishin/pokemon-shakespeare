@@ -82,6 +82,8 @@ curl --request GET http://localhost:5000/pokemon/pikachu
 {"name":"pikachu","description":"Whenever pikachu cometh across something new,  't blasts 't with a jolt of electricity. If 't be true thee cometh across a blackened berry,  't’s evidence yond this pokémon did misprision the intensity of its charge."}
 ```
 
+* Optionally: A APKI key for [funtranslations](https://funtranslations.com) can be passed from an environment variable `TRANSLATION_API_KEY` to the application
+
 ## Testing
 
 ### Run Unit Tests
