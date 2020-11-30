@@ -111,4 +111,8 @@ make integration-test
 - Consistent endpoint test behaviour: 
     * Right now test has a potential to fail due to [funtranslations](https://funtranslations.com/api/shakespeare) API rate limit. It’s challenging to produce consistent test behaviour without subscription key support. Otherwise, the endpoint test needs to mock behaviour given ample time.
 
+- Metrics:
+    * It would be nice to capture and expose essential metrics that could help in understand the behaviourß about API response time and error counts from
+    the external API integrations of pokeapi and funtranslation
+
 
