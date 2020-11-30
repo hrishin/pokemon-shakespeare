@@ -27,3 +27,6 @@ jobs:
 
     - name: Test
       run: make unit-test
+
+    - name: Test
+      run: make integration-test
