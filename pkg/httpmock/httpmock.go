@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+// MockResponse is to mock the HTTP response
+// to use with the MockClient
 type MockResponse struct {
 	URI        string
 	Body       string
@@ -19,6 +21,8 @@ func (f RoundTripFunc) RoundTrip(req *http.Request) (*http.Response, error) {
 	return f(req), nil
 }
 
+// MockClient create the mock http.client type
+// to mock HTTP response with a given MockResponse type
 func MockClient(response MockResponse) *http.Client {
 	fn := func(req *http.Request) *http.Response {
 		if strings.Contains(req.URL.String(), response.URI) == false {

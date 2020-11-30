@@ -41,41 +41,45 @@ type err struct {
 	Message string `json:"message"`
 }
 
-type translator struct {
+// Translator provides an API to translate the given words
+// to Shakespeare's style words using funtranslations API
+type Translator struct {
 	client *http.Client
-	apiURL string
-	apiKey string
+	APIURL string
+	APIKey string
 }
 
-func NewTranslator() *translator {
-	return &translator{
+// NewTranslator is factorry method to create the Translator instance
+func NewTranslator() *Translator {
+	return &Translator{
 		client: &http.Client{},
-		apiURL: funTransAPIURL,
-		apiKey: os.Getenv("TRANSLATION_API_KEY"),
+		APIURL: funTransAPIURL,
+		APIKey: os.Getenv("TRANSLATION_API_KEY"),
 	}
 }
 
-func (t *translator) rquestShakespeare(text string) (*http.Request, error) {
+func (t *Translator) rquestShakespeare(text string) (*http.Request, error) {
 	data := map[string]string{"text": text}
 	post, err := json.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%sshakespeare.json", t.apiURL), bytes.NewBuffer(post))
+	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%sshakespeare.json", t.APIURL), bytes.NewBuffer(post))
 	if err != nil {
 		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/json")
 
-	if t.apiKey != "" {
-		req.Header.Set("X-Funtranslations-Api-Secret", t.apiKey)
+	if t.APIKey != "" {
+		req.Header.Set("X-Funtranslations-Api-Secret", t.APIKey)
 	}
 
 	return req, nil
 }
 
-func (t *translator) Translate(text string) *response.ServiceResponse {
+// Translate translates the words in to Shakespear style words
+func (t *Translator) Translate(text string) *response.ServiceResponse {
 	req, err := t.rquestShakespeare(text)
 	if err != nil {
 		log.Errorf("error creating http request : %v", err)
@@ -97,11 +101,7 @@ func (t *translator) Translate(text string) *response.ServiceResponse {
 
 	if resp.StatusCode >= 400 {
 		log.Error("error executing http request")
-		var errResp errorResponse
-		err = json.Unmarshal(body, &errResp)
-		if err == nil {
-			log.Errorf("response from funtranlation service (code :%d): %s", errResp.Error.Code, errResp.Error.Message)
-		}
+		t.logResponseError(body)
 		err = fmt.Errorf("internal server error (code: %d)", http.StatusInternalServerError)
 		return response.NewErrorCode(http.StatusInternalServerError, err)
 	}
@@ -114,4 +114,12 @@ func (t *translator) Translate(text string) *response.ServiceResponse {
 	}
 
 	return response.NewSuccess(transResp.Contents.Translated)
+}
+
+func (t *Translator) logResponseError(body []byte) {
+	var errResp errorResponse
+	err := json.Unmarshal(body, &errResp)
+	if err == nil {
+		log.Errorf("response from funtranlation service (code :%d): %s", errResp.Error.Code, errResp.Error.Message)
+	}
 }

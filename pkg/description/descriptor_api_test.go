@@ -26,9 +26,9 @@ func Test_fetch_valid_resource_description(t *testing.T) {
 		}`,
 	}
 
-	descriptor := &descriptor{
+	descriptor := &Descriptor{
 		client: httpmock.MockClient(mockResponse),
-		apiURL: pokeAPIURL,
+		APIURL: pokeAPIURL,
 	}
 	got := descriptor.DescribePokemon(given)
 	want := "When several of these POKéMON gather, their\felectricity could build and cause lightning storms."
@@ -50,9 +50,9 @@ func Test_fetch_invalid_resource_description(t *testing.T) {
 		Body:       "Not Found",
 	}
 
-	descriptor := &descriptor{
+	descriptor := &Descriptor{
 		client: httpmock.MockClient(mockResponse),
-		apiURL: pokeAPIURL,
+		APIURL: pokeAPIURL,
 	}
 	got := descriptor.DescribePokemon(given)
 
