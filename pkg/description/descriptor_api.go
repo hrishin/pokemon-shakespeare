@@ -54,13 +54,15 @@ func (s speciesResponse) descriptionFor(language, version string) (string, error
 	return "", errors.New("No pokemon description found")
 }
 
+// Descriptor provides an API to fetch the basic description of the pokemon
+// using pokeapi service.
 type Descriptor struct {
 	client *http.Client
 	APIURL string
 }
 
-// NewDescriptor creates the description pointer type
-// which provides the methods to fetch the basic description of the pokemon
+// NewDescriptor is a factory method to return an instance of Descriptor
+// type
 func NewDescriptor() *Descriptor {
 	return &Descriptor{
 		client: &http.Client{},
@@ -68,6 +70,8 @@ func NewDescriptor() *Descriptor {
 	}
 }
 
+// DescribePokemon a methods which accept the pokemon name and fetch the
+// basic description of a pokemom
 func (d *Descriptor) DescribePokemon(resource string) *response.ServiceResponse {
 	url := fmt.Sprintf(d.APIURL + "pokemon-species/" + resource)
 	req, err := http.NewRequest(http.MethodGet, url, nil)
