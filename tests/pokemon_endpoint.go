@@ -23,13 +23,13 @@ var _ = Describe("Pokemon endpoint tests", func() {
 			Expect(response).To(Equal(`{"name":"charizard","description":"Charizard flies 'round the sky in search of powerful opponents. 't breathes fire of such most wondrous heat yond 't melts aught. However,  't nev'r turns its fiery breath on any opponent weaker than itself."}`), "Response message")
 		})
 
-		It("for a invlid pokemon", func() {
-			rr, err := pokemonDescription("invlid")
+		It("for a invalid pokemon", func() {
+			rr, err := pokemonDescription("invalid")
 			response := strings.TrimSuffix(rr.Body.String(), "\n")
 
 			Expect(err).To(BeNil(), "Error")
 			Expect(rr.Code).To(Equal(http.StatusNotFound), "Status code")
-			Expect(response).To(Equal(`{"error":"failed to retrieve pokemon resource invlid (code: 404)","code":404}`), "Response message")
+			Expect(response).To(Equal(`{"error":"failed to retrieve pokemon resource invalid (code: 404)","code":404}`), "Response message")
 		})
 	})
 })
