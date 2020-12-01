@@ -5,9 +5,9 @@
 </p>
 
 
-Its a Rest API service to describe a given [pokemon's](https://en.wikipedia.org/wiki/Pok%C3%A9mon) characteristics in [William Shakeperar's](https://en.wikipedia.org/wiki/William_Shakespeare) words. 
+Its a Rest API service to describe a given [Pokemon's](https://en.wikipedia.org/wiki/Pok%C3%A9mon) characteristics in [William Shakeperar's](https://en.wikipedia.org/wiki/William_Shakespeare) words. 
 
-The service is written in [Go](https://golang.org) and provides the following endpoint(s).
+The service is written in [Go](https://golang.org) and provides following endpoint(s).
 
 1) GET `/pokemon/<pokemon name>` :
 * Path Varibles:
