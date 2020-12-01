@@ -1,7 +1,7 @@
 # Pokemon Shakespeare
 
 <p align="left">
-  <a href="https://github.com/actions/setup-go/actions"><img alt="GitHub Actions CI status" src="https://github.com/hrishin/pokemon-shakespeare/workflows/build-and-test/badge.svg"></a>
+  <a href="https://github.com/hrishin/pokemon-shakespeare/actions"><img alt="GitHub Actions CI status" src="https://github.com/hrishin/pokemon-shakespeare/workflows/build-and-test/badge.svg"></a>
 </p>
 
 
