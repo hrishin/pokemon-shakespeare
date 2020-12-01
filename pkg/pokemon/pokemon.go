@@ -23,17 +23,17 @@ func GetDescriptionHandler(w http.ResponseWriter, r *http.Request) {
 	de := description.NewDescriptor()
 	desc := de.DescribePokemon(name)
 	if desc.Error != nil {
-		desc.ToErrorResonse().WriteErrorTo(w)
+		desc.ToErrorResponse().WriteErrorTo(w)
 		return
 	}
 
 	tr := translation.NewTranslator()
 	trans := tr.Translate(desc.Content)
 	if trans.Error != nil {
-		trans.ToErrorResonse().WriteErrorTo(w)
+		trans.ToErrorResponse().WriteErrorTo(w)
 		return
 	}
 
 	log.Infof("responding the translation %s for %s pokemon", trans.Content, name)
-	response.NewAPIResponse(name, trans.Content).SendReponseTO(w)
+	response.NewAPIResponse(name, trans.Content).SendResponseTO(w)
 }

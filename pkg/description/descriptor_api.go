@@ -30,7 +30,7 @@ type flavorTextEntry struct {
 	Version    name   `json:"version"`
 }
 
-func (fl flavorTextEntry) macth(language, version string) bool {
+func (fl flavorTextEntry) match(language, version string) bool {
 	if fl.Language.Name == language && fl.Version.Name == version {
 		return true
 	}
@@ -47,7 +47,7 @@ type name struct {
 
 func (s *speciesResponse) descriptionFor(language, version string) (string, error) {
 	for _, fl := range s.FlavorTextEntries {
-		if fl.macth(language, version) {
+		if fl.match(language, version) {
 			return fl.formatted(), nil
 		}
 	}

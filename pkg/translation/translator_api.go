@@ -58,7 +58,7 @@ func NewTranslator() *Translator {
 	}
 }
 
-func (t *Translator) rquestShakespeare(text string) (*http.Request, error) {
+func (t *Translator) requestShakespeare(text string) (*http.Request, error) {
 	data := map[string]string{"text": text}
 	post, err := json.Marshal(data)
 	if err != nil {
@@ -80,7 +80,7 @@ func (t *Translator) rquestShakespeare(text string) (*http.Request, error) {
 
 // Translate translates the words in to Shakespear style words
 func (t *Translator) Translate(text string) *response.ServiceResponse {
-	req, err := t.rquestShakespeare(text)
+	req, err := t.requestShakespeare(text)
 	if err != nil {
 		log.Errorf("error creating http request : %v", err)
 		return response.NewError(err)
