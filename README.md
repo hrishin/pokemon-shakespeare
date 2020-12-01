@@ -38,7 +38,7 @@ The service is written in [Go](https://golang.org) and provides the following en
 # Getting Started
 
 ## Prerequisites
-* Install the [Go](https://golang.org/doc/install)
+* Install the [Go](https://golang.org/doc/install) (1.9 >)
 * GNU [Make](https://www.gnu.org/software/make/)
 * Docker (optional, but must be installed to build the container image)
 
