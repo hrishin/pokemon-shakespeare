@@ -73,7 +73,7 @@ For Linux
 * if you want to run it as a container,
 
 ```
-docker run -d -p 5000:5000 quay.io/hriships/pokemon:v1
+docker run -d -p 5000:5000 quay.io/hriships/pokemon:0.0.1
 ```
 
 Execute HTTP GET to `http://localhost:5000/pokemon/pikachu`
