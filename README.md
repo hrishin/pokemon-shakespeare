@@ -7,9 +7,9 @@
 
 Its a Rest API service to describe a given [Pokemon's](https://en.wikipedia.org/wiki/Pok%C3%A9mon) characteristics in [William Shakeperar's](https://en.wikipedia.org/wiki/William_Shakespeare) words. 
 
-The service is written in [Go](https://golang.org) and provides following endpoint(s).
+The service is written in [Go](https://golang.org) and provides the following endpoint.
 
-1) GET `/pokemon/<pokemon name>` :
+GET `/pokemon/<pokemon name>` :
 * Path Varibles:
     - pokemon name : `string` : name of a pokemon
 * Response:
@@ -40,7 +40,8 @@ The service is written in [Go](https://golang.org) and provides following endpoi
 ## Prerequisites
 * Install the [Go](https://golang.org/doc/install) (1.9 >)
 * GNU [Make](https://www.gnu.org/software/make/)
-* Docker (optional, but must be installed to build the container image)
+* Docker (optional, but must be installed to build or run the container image)
+* [curl](https://curl.se/) or [http](https://httpie.io/) to test the endpoint
 
 ## Building
 
@@ -82,7 +83,7 @@ curl --request GET http://localhost:5000/pokemon/pikachu
 {"name":"pikachu","description":"Whenever pikachu cometh across something new,  't blasts 't with a jolt of electricity. If 't be true thee cometh across a blackened berry,  't’s evidence yond this pokémon did misprision the intensity of its charge."}
 ```
 
-* Optionally: A APKI key for [funtranslations](https://funtranslations.com) can be passed from an environment variable `TRANSLATION_API_KEY` to the application
+* Optionally: A PKI key for [funtranslations](https://funtranslations.com) can be passed from an environment variable `TRANSLATION_API_KEY` to the application
 
 ## Testing
 
