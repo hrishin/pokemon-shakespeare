@@ -45,7 +45,7 @@ type name struct {
 	Name string `json:"name"`
 }
 
-func (s speciesResponse) descriptionFor(language, version string) (string, error) {
+func (s *speciesResponse) descriptionFor(language, version string) (string, error) {
 	for _, fl := range s.FlavorTextEntries {
 		if fl.macth(language, version) {
 			return fl.formatted(), nil
