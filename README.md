@@ -83,7 +83,7 @@ curl --request GET http://localhost:5000/pokemon/pikachu
 {"name":"pikachu","description":"Whenever pikachu cometh across something new,  't blasts 't with a jolt of electricity. If 't be true thee cometh across a blackened berry,  't’s evidence yond this pokémon did misprision the intensity of its charge."}
 ```
 
-* Optionally: A PKI key for [funtranslations](https://funtranslations.com) can be passed from an environment variable `TRANSLATION_API_KEY` to the application
+* Optionally: A API key for [funtranslations](https://funtranslations.com) can be passed from an environment variable `TRANSLATION_API_KEY` to the application
 
 ## Testing
 
@@ -107,7 +107,7 @@ make integration-test
 
 ## Improvements
 - Switch to Pokeapi go-client:
- https://github.com/mtslzr/pokeapi-go once its resolved https://github.com/mtslzr/pokeapi-go/issues/29
+    * https://github.com/mtslzr/pokeapi-go once its resolved https://github.com/mtslzr/pokeapi-go/issues/29
 
 - Caching: 
     * Given the rate limit and limited API quota(paid subscription) of the [funtranslations](https://funtranslations.com/api/shakespeare) API, it would be better to implement the server-side cache to store previously obtained translations. Hence the overall resiliency of the API could be improved to a better extent and overall API response time can be reduced as well.

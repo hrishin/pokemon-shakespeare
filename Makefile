@@ -14,7 +14,7 @@ REGISTRY?=$(IMG_NAMESPACE)/$(NAME)
 all: $(BIN_LINUX) $(BIN_DARWIN)
 
 $(BIN_DARWIN):
-	GOARCH=$(ARCH) GOOS=darwin go build -o $(BIN_DARWIN) cmd/main.go
+	GOARCH=$(ARCH) GOOS=darwin CGO_ENABLED=0 go build -o $(BIN_DARWIN) cmd/main.go
 
 $(BIN_LINUX):
 	GOARCH=$(ARCH) GOOS=linux CGO_ENABLED=0 go build -o $(BIN_LINUX) cmd/main.go

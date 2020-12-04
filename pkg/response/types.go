@@ -6,11 +6,11 @@ import (
 )
 
 // ServiceResponse to represent the response from
-// the different services intefrations
+// the different services integrations
 type ServiceResponse struct {
-	Content  string
-	Error    error
-	ErroCode int
+	Content   string
+	Error     error
+	ErrorCode int
 }
 
 // NewError creates the ServiceResponse with
@@ -23,11 +23,11 @@ func NewError(err error) *ServiceResponse {
 
 // NewErrorCode creates the ServiceResponse with
 // error value and code to represent only an error message and
-// the error code from service intgration responses.
+// the error code from service integration responses.
 func NewErrorCode(code int, err error) *ServiceResponse {
 	return &ServiceResponse{
-		ErroCode: code,
-		Error:    err,
+		ErrorCode: code,
+		Error:     err,
 	}
 }
 
@@ -38,19 +38,19 @@ func NewSuccess(content string) *ServiceResponse {
 	return &ServiceResponse{Content: content}
 }
 
-// ToErrorResonse create the ErrorRsponse type to
-// from the error fields of ServiceResponse. The ErrorRsponse
+// ToErrorResponse create the ErrorResponse type to
+// from the error fields of ServiceResponse. The ErrorResponse
 // is used to represent the API error response.
-func (sr *ServiceResponse) ToErrorResonse() *ErrorRsponse {
-	statuCode := http.StatusInternalServerError
-	if sr.ErroCode != 0 {
-		statuCode = sr.ErroCode
+func (sr *ServiceResponse) ToErrorResponse() *ErrorResponse {
+	statusCode := http.StatusInternalServerError
+	if sr.ErrorCode != 0 {
+		statusCode = sr.ErrorCode
 	}
-	return &ErrorRsponse{Error: sr.Error.Error(), Code: statuCode}
+	return &ErrorResponse{Error: sr.Error.Error(), Code: statusCode}
 }
 
 // APIResponse repsent the API response to return from
-// Pokemkon endpoints. Its fields are intended for JSON
+// Pokemon endpoints. Its fields are intended for JSON
 // marshalling and unmarshalling purpose.
 type APIResponse struct {
 	Name        string `json:"name"`
@@ -64,24 +64,24 @@ func NewAPIResponse(name, description string) *APIResponse {
 	}
 }
 
-// SendReponseTO sends the APIResponse contents as a HTTP response
+// SendResponseTO sends the APIResponse contents as a HTTP response
 // in the JSON form with the appropriate HTTP status code.
-func (ar *APIResponse) SendReponseTO(w http.ResponseWriter) {
+func (ar *APIResponse) SendResponseTO(w http.ResponseWriter) {
 	w.Header().Add("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(ar)
 }
 
-// ErrorRsponse repsent the API error to return from
-// Pokemkon endpoints. Its fields are intended for JSON
+// ErrorResponse repsent the API error to return from
+// Pokemon endpoints. Its fields are intended for JSON
 // marshalling and unmarshalling purpose.
-type ErrorRsponse struct {
+type ErrorResponse struct {
 	Error string `json:"error"`
 	Code  int    `json:"code"`
 }
 
-// ErrorRsponse sends the ErrorRsponse contents as a HTTP response
+// ErrorResponse sends the ErrorResponse contents as a HTTP response
 // in the JSON form with the appropriate HTTP status code.
-func (er *ErrorRsponse) WriteErrorTo(w http.ResponseWriter) {
+func (er *ErrorResponse) WriteErrorTo(w http.ResponseWriter) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(er.Code)
 	json.NewEncoder(w).Encode(er)

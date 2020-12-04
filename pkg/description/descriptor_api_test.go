@@ -57,7 +57,7 @@ func Test_fetch_invalid_resource_description(t *testing.T) {
 	got := descriptor.DescribePokemon(given)
 
 	wantErrorCode := http.StatusNotFound
-	if got.ErroCode != wantErrorCode {
+	if got.ErrorCode != wantErrorCode {
 		t.Errorf("expecting an error code %d but got none : %d \n", wantErrorCode, got.Error)
 	}
 
