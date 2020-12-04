@@ -62,7 +62,7 @@ func Test_translate_text_error(t *testing.T) {
 		t.Errorf("expecting an error code %d but got none : %d \n", wantErrorCode, got.ErrorCode)
 	}
 
-	wantErrorMessage := "internal server error (code: 500)"
+	wantErrorMessage := "internal server error occurred (code: 500)"
 	if got.Error.Error() != wantErrorMessage {
 		t.Errorf("expecting an error %s but got %s \n", wantErrorMessage, got.Error.Error())
 	}
