@@ -87,21 +87,17 @@ func (d *Descriptor) DescribePokemon(resource string) *response.ServiceResponse 
 	}
 
 	defer resp.Body.Close()
-	//due to relatively small response size reading respoonse without doing the buffered I/O (buffio)
+	//due to relatively small response size reading response without doing the buffered I/O (buffio)
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Errorf("error reading http response for resource %s : %v", resource, err)
 		return response.NewError(err)
 	}
 
-	if resp.StatusCode >= 500 {
-		err := fmt.Errorf("internal server error (code: %d)", resp.StatusCode)
-		log.Errorf("error executing http request for the resource %s : %v", resource, err)
-		return response.NewErrorCode(resp.StatusCode, err)
-	} else if resp.StatusCode >= 400 {
-		err := fmt.Errorf("failed to retrieve pokemon resource %s (code: %d)", resource, resp.StatusCode)
-		log.Errorf("error executing http request for the resource %s : %v", resource, err)
-		return response.NewErrorCode(resp.StatusCode, err)
+	if resp.StatusCode >= 400 {
+		log.Errorf("error executing http request for the resource %s : %s", resource, string(body))
+		err := fmt.Errorf("failed to retrieve pokemon resource %s (code: %d)", resource, http.StatusNotFound)
+		return response.NewErrorCode(http.StatusNotFound, err)
 	}
 
 	var species speciesResponse

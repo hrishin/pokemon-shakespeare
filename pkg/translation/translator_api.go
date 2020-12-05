@@ -49,7 +49,7 @@ type Translator struct {
 	APIKey string
 }
 
-// NewTranslator is factorry method to create the Translator instance
+// NewTranslator is factory method to create the Translator instance
 func NewTranslator() *Translator {
 	return &Translator{
 		client: &http.Client{},
@@ -100,9 +100,9 @@ func (t *Translator) Translate(text string) *response.ServiceResponse {
 	}
 
 	if resp.StatusCode >= 400 {
-		log.Error("error executing http request")
+		log.Errorf("error executing http request for funtranlation API")
 		t.logResponseError(body)
-		err = fmt.Errorf("internal server error (code: %d)", http.StatusInternalServerError)
+		err = fmt.Errorf("internal server error occurred (code: %d)", http.StatusInternalServerError)
 		return response.NewErrorCode(http.StatusInternalServerError, err)
 	}
 
